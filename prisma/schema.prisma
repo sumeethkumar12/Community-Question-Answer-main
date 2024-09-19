@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://bablu:bablu@localhost:5432/cqadb"
+}
+
+model badges {
+  id        Int      @id @default(autoincrement())
+  user_id   Int
+  class     Int      @db.SmallInt
+  name      String   @db.VarChar(64)
+  tag_based Boolean
+  date      DateTime @db.Timestamp(6)
+}
+
+model comments {
+  id                Int      @id @default(autoincrement())
+  post_id           Int
+  user_id           Int?
+  score             Int      @db.SmallInt
+  content_license   String   @db.VarChar(64)
+  user_display_name String?  @db.VarChar(64)
+  text              String?
+  creation_date     DateTime @db.Timestamp(6)
+}
+
+model post_history {
+  id                   Int      @id @default(autoincrement())
+  post_id              Int
+  user_id              Int?
+  post_history_type_id Int      @db.SmallInt
+  user_display_name    String?  @db.VarChar(64)
+  content_license      String?  @db.VarChar(64)
+  revision_guid        String?  @db.Uuid
+  text                 String?
+  comment              String?
+  creation_date        DateTime @db.Timestamp(6)
+}
+
+model post_links {
+  id              Int      @id @default(autoincrement())
+  related_post_id Int
+  post_id         Int
+  link_type_id    Int      @db.SmallInt
+  creation_date   DateTime @db.Timestamp(6)
+}
+
+model posts {
+  id                       Int       @id @default(autoincrement())
+  owner_user_id            Int?
+  last_editor_user_id      Int?
+  post_type_id             Int       @db.SmallInt
+  accepted_answer_id       Int?
+  score                    Int
+  parent_id                Int?
+  view_count               Int?
+  answer_count             Int?      @default(0)
+  comment_count            Int?      @default(0)
+  owner_display_name       String?   @db.VarChar(64)
+  last_editor_display_name String?   @db.VarChar(64)
+  title                    String?   @db.VarChar(512)
+  tags                     String?   @db.VarChar(512)
+  content_license          String    @db.VarChar(64)
+  body                     String?
+  favorite_count           Int?
+  creation_date            DateTime  @db.Timestamp(6)
+  community_owned_date     DateTime? @db.Timestamp(6)
+  closed_date              DateTime? @db.Timestamp(6)
+  last_edit_date           DateTime? @db.Timestamp(6)
+  last_activity_date       DateTime? @db.Timestamp(6)
+}
+
+model tags {
+  id              Int    @id @default(autoincrement())
+  excerpt_post_id Int?
+  wiki_post_id    Int?
+  tag_name        String @db.VarChar(255)
+  count           Int?   @default(0)
+}
+
+model users {
+  id                Int      @id @default(autoincrement())
+  account_id        Int?
+  reputation        Int
+  views             Int?     @default(0)
+  down_votes        Int?     @default(0)
+  up_votes          Int?     @default(0)
+  display_name      String   @db.VarChar(255)
+  location          String?  @db.VarChar(512)
+  profile_image_url String?  @db.VarChar(255)
+  website_url       String?  @db.VarChar(255)
+  about_me          String?
+  creation_date     DateTime @db.Timestamp(6)
+  last_access_date  DateTime @db.Timestamp(6)
+}
+
+model votes {
+  id            Int      @id @default(autoincrement())
+  user_id       Int?
+  post_id       Int
+  vote_type_id  Int      @db.SmallInt
+  bounty_amount Int?     @db.SmallInt
+  creation_date DateTime @db.Timestamp(6)
+}
